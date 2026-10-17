@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = ["crates/wg-core", "crates/wg-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+rust-version = "1.80"
+
+# Lints shared by every crate. Each crate opts in with:  [lints] workspace = true
+[workspace.lints.rust]
+unsafe_code = "forbid"          # relaxed only in tutorial 23, in one audited crate
+
+[workspace.lints.clippy]
+unwrap_used = "warn"            # parsers must never panic on wire data
+expect_used = "warn"
+indexing_slicing = "warn"       # use get() or the Reader instead of buf[i]

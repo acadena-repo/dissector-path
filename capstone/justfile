@@ -1,0 +1,20 @@
+# Install just: https://github.com/casey/just  (cargo install just)
+default: check
+
+fmt:
+    cargo fmt --all
+
+check:
+    cargo fmt --all -- --check
+    cargo clippy --workspace --all-targets -- -D warnings
+    cargo test --workspace
+
+test:
+    cargo test --workspace
+
+# needs: cargo install cargo-watch
+watch:
+    cargo watch -x "test --workspace"
+
+doc:
+    cargo doc --workspace --no-deps --open
