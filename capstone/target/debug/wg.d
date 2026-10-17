@@ -1,0 +1,1 @@
+/home/odan/projects/dissector-path/capstone/target/debug/wg: /home/odan/projects/dissector-path/capstone/crates/wg-cli/src/main.rs /home/odan/projects/dissector-path/capstone/crates/wg-core/src/lib.rs
