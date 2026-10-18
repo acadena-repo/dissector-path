@@ -1,0 +1,13 @@
+target/
+**/target/
+captures/*.pcap
+captures/*.pcapng
+captures/*.cap
+!captures/fixtures/*.pcap
+!captures/fixtures/*.pcapng
+*.profraw
+perf.data*
+flamegraph.svg
+.vscode/
+.vscode/*
+WSL2-QUICKSTART.md
