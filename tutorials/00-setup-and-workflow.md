@@ -33,8 +33,8 @@ for everyone who clones the project.
 
 ### Part 2: Build the scaffold
 ```bash
-cd ~/dissector-path
-git init
+cd ~/projects/dissector-path
+git init                     # skip if the repo already exists
 cd capstone
 just check
 cargo run -p wg-cli          # prints: wireglass 0.1.0
@@ -66,10 +66,11 @@ into `captures/` (see `captures/README.md`; log the sources in
 `captures/SOURCES.md`).
 
 ```bash
-tshark -r captures/modbus.pcap | head
-tshark -r captures/modbus.pcap -V -c 1          # full dissection of packet 1
-tshark -r captures/modbus.pcap -x -c 1          # hex + ASCII
-tshark -r captures/modbus.pcap -T fields -e frame.number -e ip.src -e ip.dst -e mbtcp.func_code
+cd ~/projects/dissector-path                    # repo root, not capstone/
+tshark -r captures/ModbusTCP.pcap | head
+tshark -r captures/ModbusTCP.pcap -V -c 1       # full dissection of packet 1
+tshark -r captures/ModbusTCP.pcap -x -c 1       # hex + ASCII
+tshark -r captures/ModbusTCP.pcap -T fields -e frame.number -e ip.src -e ip.dst -e modbus.func_code
 ```
 Open the same file in the Wireshark GUI. Pick one packet, click through the
 layers (Ethernet, IP, TCP, Modbus), and watch which bytes light up for each

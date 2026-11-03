@@ -4,15 +4,23 @@
 > complete updated version when you say "Update my MEMORY.md". Keep it
 > factual. Ratings change only with evidence.
 
-Last updated: (not yet started)
+Last updated: 2026-11-03 (after Session 1, tutorial 00 done)
 
 ## 1. Profile (static)
 - Goal: expert protocol dissector engineer + senior Rust/Linux backend engineer.
-- Starting level: Rust newbie. Other areas: to be calibrated in Session 0.
-- Environment: Linux (WSL2 Ubuntu or native). Editor: (fill in)
-- Time budget: (hours per week)
+- Starting level: Rust newbie. Other areas calibrated in Session 0 (see section 3).
+- Environment: WSL2, Ubuntu 26.04 (kernel 6.18 WSL2). Editor: VS Code + rust-analyzer.
+- Repo: `~/projects/dissector-path` (Linux filesystem), remote `origin`, branch `main`.
+- Toolchain (doctor.sh, 2026-10-22): rustc/cargo 1.99.1, rustup 1.29.1, just 1.59.0,
+  cargo-nextest 0.9.148, cargo-watch 8.5.3, tshark 4.6.4, tcpdump 4.99.6.
+- Time budget: ~9 h/week planned (Mon 1h, Thu 2h, Fri 2h, Sat 3h, Sun 3h = 11h with buffer).
+- Plan window: 12 weeks, Oct 19, 2026 to Jan 10, 2027 (~110 h).
 - Preferred learning style: build first, theory on demand (adjust if wrong).
-- Target date for first full protocol (Modbus): (fill in)
+- Target date for first full protocol (Modbus): Dec 20, 2026 (draft, end of week 9).
+- Schedule habit: Monday = short drills; Thu/Fri = reading and tests; Sat/Sun = building.
+- Mentor notes on working style: answers sometimes skip parts of a multi-part
+  question (skipped Part 4 predictions; omitted "what happens" in teach-back c).
+  Mentor must require every part. Responds well to concrete, itemized feedback.
 
 ## 2. Progress
 
@@ -20,16 +28,16 @@ Status: `todo`, `doing`, `done` (exit criteria met + teach-back passed).
 
 | # | Tutorial | Status | Date done | Notes |
 |---|---|---|---|---|
-| 00 | Setup and workflow | todo | | |
-| 01 | Ownership, borrowing, slices: hexdump | todo | | |
-| 02 | Types and error modeling: Reader | todo | | |
-| 03 | Traits, generics, lifetimes: Ethernet/IPv4 | todo | | |
-| 04 | Testing: unit, snapshot, property | todo | | |
-| 05 | pcap/pcapng reader | todo | | |
-| 06 | Layered parsing: VLAN, IPv6, UDP, TCP | todo | | |
-| 07 | Modbus/TCP dissector | todo | | |
-| 08 | Fuzzing and differential testing | todo | | |
-| 09 | TCP stream reassembly | todo | | |
+| 00 | Setup and workflow | done | 2026-11-03 | Took ~2 weeks of calendar time (planned weeks 1-2). ADR-0001 needed 3 drafts; teach-back passed after one round of gap-closing |
+| 01 | Ownership, borrowing, slices: hexdump | todo | | planned weeks 1-2; now behind by ~1 week |
+| 02 | Types and error modeling: Reader | todo | | planned week 3 |
+| 03 | Traits, generics, lifetimes: Ethernet/IPv4 | todo | | planned weeks 4-5 |
+| 04 | Testing: unit, snapshot, property | todo | | planned weeks 4-5 |
+| 05 | pcap/pcapng reader | todo | | planned weeks 6-7 |
+| 06 | Layered parsing: VLAN, IPv6, UDP, TCP | todo | | planned weeks 6-7 |
+| 07 | Modbus/TCP dissector | todo | | planned weeks 8-9 |
+| 08 | Fuzzing and differential testing | todo | | planned week 10 |
+| 09 | TCP stream reassembly | todo | | planned weeks 11-12 |
 | 10 | Flow table and state machines (DNP3) | todo | | |
 | 11 | Dissector framework | todo | | |
 | 12 | EtherNet/IP and CIP | todo | | |
@@ -50,54 +58,69 @@ Status: `todo`, `doing`, `done` (exit criteria met + teach-back passed).
 
 | Skill | Rating | Evidence / last changed |
 |---|---|---|
-| Rust language fundamentals | 0 | newbie (self-reported) |
-| Idiomatic Rust and API design | 0 | |
-| Error handling and parser robustness | ? | calibrate in Session 0 |
-| Testing, property tests, fuzzing | ? | |
-| Network stacks (L2-L4) | ? | |
-| TCP streams and reassembly | ? | |
-| Dissection craft (framing, state) | ? | |
-| ICS/OT protocols | ? | |
-| Performance and profiling | ? | |
-| Linux systems programming | ? | |
-| Concurrency and async | ? | |
-| Security mindset for parsers | ? | |
-| Architecture and services | ? | |
-| Reverse engineering | ? | |
-| Communication, design docs, mentoring | ? | |
+| Rust language fundamentals | 1.5 | T00 (was 1): predicted E0384 + `let mut` fix; explained E0382 via ownership moving to `w`; knew `i32` copies; read E0308 and applied `.copied()`. Gaps: confused "out of scope" with "moved"; said `.clone()` where `.cloned()` was needed; thought `get()` dereferences |
+| Idiomatic Rust and API design | 1 | T00 (was 0): wrote `byte_at(&[u8], usize) -> Option<u8>` with `get().copied()` (hint 1 + compiler help); argued borrow over clone for zero-copy |
+| Error handling and parser robustness | 1 | T00 (was 0.5): turned a panicking index into `Option`; explained Ethernet padding vs IPv4 total length (with prompting); derived FC 04 quantity bound 125 from the 253-byte PDU limit |
+| Testing, property tests, fuzzing | 1.5 | T00: unchanged. Wrongly predicted `cargo test` stops at first failure; then observed per-binary fail-fast (doc-tests skipped). Tests were given, not designed |
+| Network stacks (L2-L4) | 1.5 | T00: unchanged. Hand-decoded a Modbus/TCP frame, length arithmetic correct, IHL/data-offset nibble right after hints. Gaps: 1-based offsets, said the unit is "20 bytes" (it is 32-bit words), assumed TCP = 20 B without reading the field, treated Ethernet as fixed (forgot VLAN again) |
+| TCP streams and reassembly | ? | Not tested |
+| Dissection craft (framing, state) | ? | Not tested |
+| ICS/OT protocols | 1 | T00 (was ?): identified MBAP fields and FC 04 Read Input Registers, decoded start address 2258 and count 2, derived the 125-register limit |
+| Performance and profiling | ? | Not tested |
+| Linux systems programming | 2 | S0: read tcpdump command correctly; missed CAP_NET_RAW and BPF-in-kernel details. T00: setup done alone, doctor.sh 24/24 |
+| Concurrency and async | ? | Not tested |
+| Security mindset for parsers | 1 | T00 (was 0.5): after correction, names panic -> sensor DoS and C over-read -> info leak (Heartbleed-style). Relapsed in teach-back ("get() avoids accessing unbounded areas") |
+| Architecture and services | 1 | T00 (was ?): explained workspace benefits (shared config, overview) and lib/bin split after hint; initially called a workspace a "namespace" and gave mocking as the reason |
+| Reverse engineering | ? | Not tested |
+| Communication, design docs, mentoring | 1 | T00 (was ?): ADR-0001 v1 was ~2 pages, generic, decision contradicted its own context; v2 left 4 of 8 review items unaddressed; v3 acceptable |
 
 ## 4. Decisions (ADR index)
 
 | ADR | Title | Status | Date |
 |---|---|---|---|
-| (none yet) | | | |
+| 0001 | Documentation strategy and decisions traceability (ADRs in `adr/`) | accepted | 2026-11-01 |
 
 ## 5. Weak spots (open)
 
 | Date | Weak spot | Evidence | Drill assigned | Status |
 |---|---|---|---|---|
-| (none yet) | | | | open |
+| 2026-10-18 | Borrow rules: many `&T` XOR one `&mut T`; why `push` conflicts with a live borrow (reallocation) | S0 Q3: guessed a `mut` on the binding was needed; could not explain the conflict | Tutorial 01 + Monday drill "borrow rules" (not done yet) | open |
+| 2026-10-18 | Move vs copy; compile error vs runtime crash | S0 Q1. T00: improved (E0382 explained, `i32: Copy`), but mixed scope with ownership and `.clone()` with `.cloned()` | Tutorial 01 | improving |
+| 2026-10-18 | Variable-length header chains and offsets | S0 Q4. T00: assumed TCP = 20 B, unit stated as "20 bytes" instead of 32-bit words, forgot VLAN again | Tutorials 03 and 06 | open |
+| 2026-10-18 | Untrusted length fields (over-read, huge alloc, overflow wrap) | S0 Q5/5b. T00: improved (total length vs padding, FC 04 bound) | Tutorial 02 (Reader with checked ops), then 20 | improving |
+| 2026-10-22 | Which layer catches what: rustc lints vs clippy lints vs runtime bounds checks; panic vs memory over-read | T00: blamed `forbid(unsafe_code)` for a safe `buf[10]` three times; teach-back said `get()` avoids "accessing unbounded areas" | Drill "lint layers" + Tutorial 01 | open |
+| 2026-10-25 | 0-based offsets and half-open ranges (`a..b` has `b - a` elements, valid iff `a <= b <= len`) | T00 Part 4: all offsets 1-based; teach-back: called `14..34` "19 bytes" (it is 20; it panics because end 34 > len 20) | Tutorial 01 (hexdump offset column) + drill "ranges" | open |
+| 2026-11-01 | Concise, project-specific design writing | ADR-0001 took 3 drafts; v2 ignored half the review items | Every ADR; say "won't fix, because..." instead of silently skipping | open |
 
 ## 6. Concepts mastered (teach-back passed)
-- (none yet)
+- Cargo toolchain basics: `build`, `test`, `clippy`, `fmt` vs `fmt -- --check` (T00)
+- Cargo workspace: shared `Cargo.lock`, `target/`, metadata and lints; lib (`wg-core`) vs bin (`wg-cli`) split so tests, fuzz targets and benches can depend on the library (T00)
+- Purpose of `unwrap_used`, `expect_used`, `indexing_slicing`: no panics on wire data (T00)
+- Panic-free access with `slice::get` returning `Option` (T00)
+- Reading compiler errors top to bottom incl. `help:` (E0382, E0384, E0308, clippy `indexing_slicing`) (T00)
 
 ## 7. Capstone state (Wireglass)
 
-- State tag: `S0` (scaffold only)
-- Crates: `wg-core` (empty), `wg-cli` (prints version)
-- Protocols dissected: none
+- State tag: `S0` (commit `0f7e9cb`, pushed to `origin`)
+- Crates: `wg-core` (`VERSION` const, one test), `wg-cli` (binary `wg`, prints `wireglass 0.1.0`)
+- Protocols dissected: none in code (one Modbus/TCP frame decoded by hand)
 - Test counts: unit 1, property 0, fuzz targets 0, snapshot 0
 - Benchmarks: none
-- Known issues: none
-- Last `just check`: (date and result)
+- Captures (public, ITI ICS-Security-Tools, logged in `captures/SOURCES.md`, gitignored): `ModbusTCP.pcap`, `EthernetIP-CIP.pcap`, `PROFINET-RT.pcap`
+- Known issues: commit `49edadc` mislabeled `t01:` (pushed; not rewritten). doctor.sh marks the `tcpreplay` interface-list warning as `[ ok ]`
+- Last `just check`: green on S0 (after reverting the `byte_at` exercise)
+- Mentor fixes to tutorial 00 text: repo path `~/projects/dissector-path`, capture name `ModbusTCP.pcap`, field `modbus.func_code`
 
 ## 8. Session log
 
 | # | Date | Duration | Covered | Outcome |
 |---|---|---|---|---|
-| 0 | | | Baseline assessment | |
+| 0 | 2026-10-18 | ~30 min (est.) | Baseline assessment: Rust (move, borrow), networking (L2-L4 offsets), security (untrusted length), testing (unit vs fuzz), Linux (tcpdump); schedule and pacing | Ratings calibrated; 4 weak spots logged; 12-week plan drafted (Modbus target Dec 20, 2026) |
+| 1 | 2026-10-21 to 2026-11-03 | several sittings (not timed) | Tutorial 00: environment check, scaffold build, compiler errors (E0382/E0384/E0308/clippy), `third` panic vs `byte_at` `Option`, hand dissection of a Modbus/TCP frame, ADR-0001 (3 drafts), git tag/push, teach-back | T00 done; S0 tagged and pushed; 7 ratings changed; 3 new weak spots |
 
 ## 9. Next actions
-1. Say "Start session" to run Session 0 (baseline assessment).
-2. Complete tutorial 00 (setup and workflow).
-3. Install tshark and download two public Modbus/DNP3 sample captures.
+1. Monday drill: "Drill borrow rules" (assigned in S0, still pending).
+2. Short drill: "Drill ranges" (0-based offsets, half-open ranges, `get(a..b)`), 15 min.
+3. Say "Next tutorial" to start tutorial 01 (hexdump, S0 -> S1, ~6 h). Read Rust Book chapters 3-4 alongside.
+4. Schedule check: T01 is ~1 week behind plan. Aim to finish T01 by Nov 15 to protect the Dec 20 Modbus target; if not, re-plan in the next session.
+5. Time your sittings (rough minutes per session) so the next log entry has real durations.
