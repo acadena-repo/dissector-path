@@ -5,4 +5,4 @@ Keep the index below in sync with MEMORY.md.
 
 | ADR | Title | Status |
 |---|---|---|
-| (none yet) | Tutorial 00 asks you to write ADR-0001 | |
+| [0001](0001-record-decisions.md) | Documentation strategy and decisions traceability | accepted |
